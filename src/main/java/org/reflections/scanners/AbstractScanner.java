@@ -1,8 +1,8 @@
 package org.reflections.scanners;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Multimap;
+import java.util.function.Predicate;
+import org.reflections.predicates.Predicates;
+import org.reflections.collections.Multimap;
 import org.reflections.Configuration;
 import org.reflections.ReflectionsException;
 import org.reflections.adapters.MetadataAdapter;
@@ -67,7 +67,7 @@ public abstract class AbstractScanner implements Scanner {
 
     //
     public boolean acceptResult(final String fqn) {
-		return fqn != null && resultFilter.apply(fqn);
+		return fqn != null && resultFilter.test(fqn);
 	}
 
 	protected MetadataAdapter getMetadataAdapter() {

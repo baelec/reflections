@@ -1,6 +1,6 @@
 package org.reflections.scanners;
 
-import com.google.common.base.Joiner;
+import org.reflections.collections.Joiner;
 
 /** scans fields and methods and stores fqn as key and elements as values */
 @SuppressWarnings({"unchecked"})
@@ -27,7 +27,7 @@ public class TypeElementsScanner extends AbstractScanner {
             for (Object method : getMetadataAdapter().getMethods(cls)) {
                 if (!publicOnly || getMetadataAdapter().isPublic(method)) {
                     String methodKey = getMetadataAdapter().getMethodName(method) + "(" +
-                            Joiner.on(", ").join(getMetadataAdapter().getParameterNames(method)) + ")";
+                            Joiner.on(", ", getMetadataAdapter().getParameterNames(method)) + ")";
                     getStore().put(className, methodKey);
                 }
             }

@@ -1,7 +1,7 @@
 package org.reflections.vfs;
 
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Lists;
+import org.reflections.collections.Lists;
 
 import java.util.Collections;
 import java.util.Iterator;

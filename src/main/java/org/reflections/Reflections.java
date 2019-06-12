@@ -1,8 +1,11 @@
 package org.reflections;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
-import com.google.common.collect.*;
+import org.reflections.collections.Joiner;
+import java.util.function.Predicate;
+
+import org.reflections.collections.Lists;
+import org.reflections.collections.Multimap;
+import org.reflections.collections.Sets;
 import org.reflections.scanners.*;
 import org.reflections.scanners.Scanner;
 import org.reflections.serializers.Serializer;
@@ -26,9 +29,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Pattern;
 
-import static com.google.common.base.Predicates.in;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.concat;
 import static java.lang.String.format;
 import static org.reflections.ReflectionUtils.*;
 import static org.reflections.util.Utils.*;
@@ -92,7 +92,7 @@ import static org.reflections.util.Utils.*;
  * <p>Use {@link #getStore()} to access and query the store directly
  * <p>In order to save the store metadata, use {@link #save(String)} or {@link #save(String, org.reflections.serializers.Serializer)}
  * for example with {@link org.reflections.serializers.XmlSerializer} or {@link org.reflections.serializers.JavaCodeSerializer}
- * <p>In order to collect pre saved metadata and avoid re-scanning, use {@link #collect(String, com.google.common.base.Predicate, org.reflections.serializers.Serializer...)}}
+ * <p>In order to collect pre saved metadata and avoid re-scanning, use {@link #collect(String, java.util.function.Predicate, org.reflections.serializers.Serializer...)}}
  * <p><i>Make sure to scan all the transitively relevant packages.
  * <br>for instance, given your class C extends B extends A, and both B and A are located in another package than C,
  * when only the package of C is scanned - then querying for sub types of A returns nothing (transitive), but querying for sub types of B returns C (direct).
@@ -249,7 +249,7 @@ public class Reflections {
                 Predicate<String> inputsFilter = configuration.getInputsFilter();
                 String path = file.getRelativePath();
                 String fqn = path.replace('/', '.');
-                if (inputsFilter == null || inputsFilter.apply(path) || inputsFilter.apply(fqn)) {
+                if (inputsFilter == null || inputsFilter.test(path) || inputsFilter.test(fqn)) {
                     Object classObject = null;
                     for (Scanner scanner : configuration.getScanners()) {
                         try {
@@ -464,7 +464,7 @@ public class Reflections {
         if (honorInherited) {
             if (inherited) {
                 Iterable<String> subTypes = store.get(index(SubTypesScanner.class), filter(annotated, new Predicate<String>() {
-                    public boolean apply(@Nullable String input) {
+                    public boolean test(@Nullable String input) {
                         final Class<?> type = forName(input, loaders());
                         return type != null && !type.isInterface();
                     }
@@ -583,7 +583,7 @@ public class Reflections {
      */
     public Set<String> getResources(final Pattern pattern) {
         return getResources(new Predicate<String>() {
-            public boolean apply(String input) {
+            public boolean test(String input) {
                 return pattern.matcher(input).matches();
             }
         });

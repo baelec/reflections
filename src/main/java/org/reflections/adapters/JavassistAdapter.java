@@ -1,7 +1,7 @@
 package org.reflections.adapters;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
+import org.reflections.collections.Joiner;
+import org.reflections.collections.Lists;
 import javassist.bytecode.*;
 import javassist.bytecode.annotation.Annotation;
 import org.reflections.ReflectionsException;
@@ -113,7 +113,7 @@ public class JavassistAdapter implements MetadataAdapter<ClassFile, FieldInfo, M
     }
 
     public String getMethodKey(ClassFile cls, MethodInfo method) {
-        return getMethodName(method) + "(" + Joiner.on(", ").join(getParameterNames(method)) + ")";
+        return getMethodName(method) + "(" + Joiner.on(", ", getParameterNames(method)) + ")";
     }
 
     public String getMethodFullKey(ClassFile cls, MethodInfo method) {

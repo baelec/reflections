@@ -1,7 +1,7 @@
 package org.reflections.adapters;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
+import org.reflections.collections.Joiner;
+import org.reflections.collections.Lists;
 import org.reflections.util.Utils;
 import org.reflections.vfs.Vfs;
 
@@ -94,7 +94,7 @@ public class JavaReflectionAdapter implements MetadataAdapter<Class, Field, Memb
     }
 
     public String getMethodKey(Class cls, Member method) {
-        return getMethodName(method) + "(" + Joiner.on(", ").join(getParameterNames(method)) + ")";
+        return getMethodName(method) + "(" + Joiner.on(", ", getParameterNames(method)) + ")";
     }
 
     public String getMethodFullKey(Class cls, Member method) {

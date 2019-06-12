@@ -1,10 +1,12 @@
 package org.reflections;
 
-import com.google.common.base.Supplier;
-import com.google.common.collect.*;
+import org.reflections.collections.Lists;
+import org.reflections.collections.Multimap;
+import org.reflections.collections.Sets;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * stores metadata information in multimaps

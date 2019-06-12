@@ -1,7 +1,7 @@
 package org.reflections;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Sets;
+import org.reflections.collections.Sets;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Test;
@@ -125,7 +125,7 @@ public class ReflectionUtilsTest {
 
     private Set<String> names(Set<? extends Member> o) {
         return Sets.newHashSet(transform(o, new Function<Member, String>() {
-            public String apply(@Nullable Member input) {
+            public String test(@Nullable Member input) {
                 return input.getName();
             }
         }));

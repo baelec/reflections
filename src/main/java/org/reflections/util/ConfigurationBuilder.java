@@ -1,10 +1,9 @@
 package org.reflections.util;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
-import com.google.common.collect.ObjectArrays;
-import com.google.common.collect.Sets;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.util.function.Predicate;
+import org.reflections.collections.Lists;
+import org.reflections.collections.ObjectArrays;
+import org.reflections.collections.Sets;
 import org.reflections.Configuration;
 import org.reflections.Reflections;
 import org.reflections.ReflectionsException;
@@ -218,13 +217,13 @@ public class ConfigurationBuilder implements Configuration {
     }
 
     /** sets the input filter for all resources to be scanned.
-     * <p> supply a {@link com.google.common.base.Predicate} or use the {@link FilterBuilder}*/
+     * <p> supply a {@link java.util.function.Predicate} or use the {@link FilterBuilder}*/
     public void setInputsFilter(@Nullable Predicate<String> inputsFilter) {
         this.inputsFilter = inputsFilter;
     }
 
     /** sets the input filter for all resources to be scanned.
-     * <p> supply a {@link com.google.common.base.Predicate} or use the {@link FilterBuilder}*/
+     * <p> supply a {@link java.util.function.Predicate} or use the {@link FilterBuilder}*/
     public ConfigurationBuilder filterInputsBy(Predicate<String> inputsFilter) {
         this.inputsFilter = inputsFilter;
         return this;
@@ -298,7 +297,7 @@ public class ConfigurationBuilder implements Configuration {
 
     /** add class loader, might be used for resolving methods/fields */
     public ConfigurationBuilder addClassLoaders(ClassLoader... classLoaders) {
-        this.classLoaders = this.classLoaders == null ? classLoaders : ObjectArrays.concat(this.classLoaders, classLoaders, ClassLoader.class);
+        this.classLoaders = this.classLoaders == null ? classLoaders : ObjectArrays.concat(this.classLoaders, classLoaders).toArray(new ClassLoader[]{});
         return this;
     }
 

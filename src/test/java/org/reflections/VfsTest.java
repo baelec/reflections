@@ -25,7 +25,7 @@ import org.reflections.vfs.SystemDir;
 import org.reflections.vfs.Vfs;
 import org.reflections.vfs.ZipDir;
 
-import com.google.common.base.Predicates;
+import org.reflections.predicates.Predicates;
 import com.google.common.collect.Iterables;
 
 import javassist.bytecode.ClassFile;

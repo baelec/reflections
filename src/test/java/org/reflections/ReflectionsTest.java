@@ -1,10 +1,10 @@
 package org.reflections;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import org.reflections.collections.Lists;
+import org.reflections.collections.Sets;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -347,7 +347,7 @@ public class ReflectionsTest {
     private Iterable<Class<? extends Annotation>> annotationTypes(Iterable<Annotation> annotations) {
         return Iterables.transform(annotations, new Function<Annotation, Class<? extends Annotation>>() {
             @Nullable
-            public Class<? extends Annotation> apply(@Nullable Annotation input) {
+            public Class<? extends Annotation> test(@Nullable Annotation input) {
                 return input != null ? input.annotationType() : null;
             }
         });

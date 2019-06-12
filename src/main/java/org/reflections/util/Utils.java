@@ -1,7 +1,7 @@
 package org.reflections.util;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Sets;
+import org.reflections.collections.Joiner;
+import org.reflections.collections.Sets;
 import org.reflections.Reflections;
 import org.reflections.ReflectionsException;
 import org.reflections.scanners.Scanner;
@@ -192,11 +192,11 @@ public abstract class Utils {
     }
 
     public static String name(Constructor constructor) {
-        return constructor.getName() + "." + "<init>" + "(" + Joiner.on(", ").join(names(constructor.getParameterTypes())) + ")";
+        return constructor.getName() + "." + "<init>" + "(" + Joiner.on(", ", names(constructor.getParameterTypes())) + ")";
     }
 
     public static String name(Method method) {
-        return method.getDeclaringClass().getName() + "." + method.getName() + "(" + Joiner.on(", ").join(names(method.getParameterTypes())) + ")";
+        return method.getDeclaringClass().getName() + "." + method.getName() + "(" + Joiner.on(", ", names(method.getParameterTypes())) + ")";
     }
 
     public static String name(Field field) {

@@ -1,6 +1,6 @@
 package org.reflections.scanners;
 
-import com.google.common.base.Joiner;
+import org.reflections.collections.Joiner;
 import javassist.*;
 import javassist.bytecode.MethodInfo;
 import javassist.expr.*;
@@ -82,7 +82,7 @@ public class MemberUsageScanner extends AbstractScanner {
     }
 
     String parameterNames(MethodInfo info) {
-        return Joiner.on(", ").join(getMetadataAdapter().getParameterNames(info));
+        return Joiner.on(", ", getMetadataAdapter().getParameterNames(info));
     }
 
     private ClassPool getClassPool() {

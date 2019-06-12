@@ -1,11 +1,11 @@
 package org.reflections.serializers;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-import com.google.common.collect.Sets;
+import org.reflections.collections.Joiner;
+import java.util.function.Supplier;
+import org.reflections.collections.Lists;
+import org.reflections.collections.Multimap;
+import org.reflections.collections.Multimaps;
+import org.reflections.collections.Sets;
 import com.google.common.io.Files;
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
@@ -272,7 +272,7 @@ public class JavaCodeSerializer implements Serializer {
             cursor = cursor.getDeclaringClass();
         }
 
-        String classOgnl = Joiner.on(".").join(ognl.subList(1, ognl.size())).replace(".$", "$");
+        String classOgnl = Joiner.on(".", ognl.subList(1, ognl.size())).replace(".$", "$");
         return Class.forName(classOgnl);
     }
 

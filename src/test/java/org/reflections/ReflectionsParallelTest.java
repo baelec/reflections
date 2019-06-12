@@ -1,6 +1,6 @@
 package org.reflections;
 
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.reflections.scanners.*;

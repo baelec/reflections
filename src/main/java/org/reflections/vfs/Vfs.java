@@ -1,8 +1,8 @@
 package org.reflections.vfs;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import org.reflections.collections.Iterables;
+import org.reflections.collections.Lists;
 import org.reflections.Reflections;
 import org.reflections.ReflectionsException;
 import org.reflections.util.ClasspathHelper;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.jar.JarFile;
 
 /**
@@ -47,7 +48,7 @@ import java.util.jar.JarFile;
  *
  *      Vfs.Dir dir = Vfs.fromURL(new URL("http://mirrors.ibiblio.org/pub/mirrors/maven2/org/slf4j/slf4j-api/1.5.6/slf4j-api-1.5.6.jar"));
  * </pre>
- * <p>use {@link org.reflections.vfs.Vfs#findFiles(java.util.Collection, com.google.common.base.Predicate)} to get an
+ * <p>use {@link org.reflections.vfs.Vfs#findFiles(java.util.Collection, java.util.function.Predicate)} to get an
  * iteration of files matching given name predicate over given list of urls
  */
 public abstract class Vfs {
@@ -122,11 +123,11 @@ public abstract class Vfs {
     /** return an iterable of all {@link org.reflections.vfs.Vfs.File} in given urls, starting with given packagePrefix and matching nameFilter */
     public static Iterable<File> findFiles(final Collection<URL> inUrls, final String packagePrefix, final Predicate<String> nameFilter) {
         Predicate<File> fileNamePredicate = new Predicate<File>() {
-            public boolean apply(File file) {
+            public boolean test(File file) {
                 String path = file.getRelativePath();
                 if (path.startsWith(packagePrefix)) {
                     String filename = path.substring(path.indexOf(packagePrefix) + packagePrefix.length());
-                    return !Utils.isEmpty(filename) && nameFilter.apply(filename.substring(1));
+                    return !Utils.isEmpty(filename) && nameFilter.test(filename.substring(1));
                 } else {
                     return false;
                 }
