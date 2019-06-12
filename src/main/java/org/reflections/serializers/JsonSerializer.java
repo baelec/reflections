@@ -60,7 +60,7 @@ public class JsonSerializer implements Serializer {
                         }
                     })
                     .registerTypeAdapter(Multimap.class, new JsonDeserializer<Multimap>() {
-                        public Multimap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                        public Multimap deserialize(JsonElement jsonElement, Type type, JsonDeseria,lizationContext jsonDeserializationContext) throws JsonParseException {
                             final SetMultimap<String,String> map = Multimaps.newSetMultimap(new HashMap<String, Collection<String>>(), new Supplier<Set<String>>() {
                                 public Set<String> get() {
                                     return Sets.newHashSet();

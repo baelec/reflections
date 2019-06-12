@@ -1,6 +1,6 @@
 package org.reflections.vfs;
 
-import com.google.common.collect.AbstractIterator;
+import kotlin.collections.AbstractIterator;
 import org.reflections.collections.Lists;
 
 import java.util.Collections;
@@ -40,17 +40,17 @@ public class SystemDir implements Vfs.Dir {
                     final Stack<File> stack = new Stack<File>();
                     {stack.addAll(listFiles(file));}
 
-                    protected Vfs.File computeNext() {
+                    protected void computeNext() {
                         while (!stack.isEmpty()) {
                             final File file = stack.pop();
                             if (file.isDirectory()) {
                                 stack.addAll(listFiles(file));
                             } else {
-                                return new SystemFile(SystemDir.this, file);
+                               setNext(new SystemFile(SystemDir.this, file));
                             }
                         }
 
-                        return endOfData();
+                        this.done();
                     }
                 };
             }

@@ -10,3 +10,11 @@ fun <T> and(predicates: Array<Predicate<in T>>): Predicate<T> {
 }
 
 fun <T> alwaysTrue() = Predicate<T> { true }
+
+fun <T> not(predicate: Predicate<in T>): Predicate<T> {
+  return Predicate { value -> !predicate.test(value) }
+}
+
+fun <T> has(collection: Collection<T>): Predicate<T> {
+  return Predicate { value -> collection.contains(value) }
+}

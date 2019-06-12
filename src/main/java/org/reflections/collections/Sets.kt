@@ -17,3 +17,5 @@ fun <E> newHashSet(elements: Iterable<E>): HashSet<E> {
   }
   return set
 }
+
+fun <E> difference(s0: Set<E>, s1: Set<E>): Set<E> = s0.minus(s1)

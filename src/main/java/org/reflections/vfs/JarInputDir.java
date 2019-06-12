@@ -1,6 +1,6 @@
 package org.reflections.vfs;
 
-import com.google.common.collect.AbstractIterator;
+import kotlin.collections.AbstractIterator;
 import org.reflections.ReflectionsException;
 import org.reflections.util.Utils;
 
@@ -37,19 +37,19 @@ public class JarInputDir implements Vfs.Dir {
                         catch (Exception e) { throw new ReflectionsException("Could not open url connection", e); }
                     }
 
-                    protected Vfs.File computeNext() {
+                    protected void computeNext() {
                         while (true) {
                             try {
                                 ZipEntry entry = jarInputStream.getNextJarEntry();
                                 if (entry == null) {
-                                    return endOfData();
+                                    return;
                                 }
 
                                 long size = entry.getSize();
                                 if (size < 0) size = 0xffffffffl + size; //JDK-6916399
                                 nextCursor += size;
                                 if (!entry.isDirectory()) {
-                                    return new JarInputFile(entry, JarInputDir.this, cursor, nextCursor);
+                                    setNext(new JarInputFile(entry, JarInputDir.this, cursor, nextCursor));
                                 }
                             } catch (IOException e) {
                                 throw new ReflectionsException("could not get next zip entry", e);

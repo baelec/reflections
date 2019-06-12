@@ -1,11 +1,13 @@
 package org.reflections;
 
+import org.reflections.collections.Iterables;
 import org.reflections.collections.Joiner;
 import java.util.function.Predicate;
 
 import org.reflections.collections.Lists;
 import org.reflections.collections.Multimap;
 import org.reflections.collections.Sets;
+import org.reflections.predicates.Predicates;
 import org.reflections.scanners.*;
 import org.reflections.scanners.Scanner;
 import org.reflections.serializers.Serializer;
@@ -181,7 +183,7 @@ public class Reflections {
         }
 
         if (log != null && log.isDebugEnabled()) {
-            log.debug("going to scan these urls:\n{}", Joiner.on("\n").join(configuration.getUrls()));
+            log.debug("going to scan these urls:\n{}", Joiner.on("\n", configuration.getUrls()));
         }
 
         long time = System.currentTimeMillis();
@@ -316,7 +318,7 @@ public class Reflections {
             }
 
             log.info(format("Reflections took %d ms to collect %d url%s, producing %d keys and %d values [%s]",
-                    System.currentTimeMillis() - start, urls.size(), urls.size() > 1 ? "s" : "", keys, values, Joiner.on(", ").join(urls)));
+                    System.currentTimeMillis() - start, urls.size(), urls.size() > 1 ? "s" : "", keys, values, Joiner.on(", ", urls)));
         }
         return reflections;
     }
@@ -381,8 +383,8 @@ public class Reflections {
     public void expandSuperTypes() {
         if (store.keySet().contains(index(SubTypesScanner.class))) {
             Multimap<String, String> mmap = store.get(index(SubTypesScanner.class));
-            Sets.SetView<String> keys = Sets.difference(mmap.keySet(), Sets.newHashSet(mmap.values()));
-            Multimap<String, String> expand = HashMultimap.create();
+            Set<String> keys = Sets.difference(mmap.keySet(), Sets.newHashSet(mmap.values()));
+            Multimap<String, String> expand = new Multimap();
             for (String key : keys) {
                 final Class<?> type = forName(key, loaders());
                 if (type != null) {
@@ -436,7 +438,7 @@ public class Reflections {
     public Set<Class<?>> getTypesAnnotatedWith(final Class<? extends Annotation> annotation, boolean honorInherited) {
         Iterable<String> annotated = store.get(index(TypeAnnotationsScanner.class), annotation.getName());
         Iterable<String> classes = getAllAnnotated(annotated, annotation.isAnnotationPresent(Inherited.class), honorInherited);
-        return Sets.newHashSet(concat(forNames(annotated, loaders()), forNames(classes, loaders())));
+        return Sets.newHashSet(Iterables.concat(forNames(annotated, loaders()), forNames(classes, loaders())));
     }
 
     /**
@@ -457,7 +459,7 @@ public class Reflections {
         Iterable<String> annotated = store.get(index(TypeAnnotationsScanner.class), annotation.annotationType().getName());
         Iterable<Class<?>> filter = filter(forNames(annotated, loaders()), withAnnotation(annotation));
         Iterable<String> classes = getAllAnnotated(names(filter), annotation.annotationType().isAnnotationPresent(Inherited.class), honorInherited);
-        return Sets.newHashSet(concat(filter, forNames(filter(classes, not(in(Sets.newHashSet(annotated)))), loaders())));
+        return Sets.newHashSet(Iterables.concat(filter, forNames(filter(classes, Predicates.not(Predicates.has(Sets.newHashSet(annotated)))), loaders())));
     }
 
     protected Iterable<String> getAllAnnotated(Iterable<String> annotated, boolean inherited, boolean honorInherited) {
@@ -469,13 +471,13 @@ public class Reflections {
                         return type != null && !type.isInterface();
                     }
                 }));
-                return concat(subTypes, store.getAll(index(SubTypesScanner.class), subTypes));
+                return Iterables.concat(subTypes, store.getAll(index(SubTypesScanner.class), subTypes));
             } else {
                 return annotated;
             }
         } else {
-            Iterable<String> subTypes = concat(annotated, store.getAll(index(TypeAnnotationsScanner.class), annotated));
-            return concat(subTypes, store.getAll(index(SubTypesScanner.class), subTypes));
+            Iterable<String> subTypes = Iterables.concat(annotated, store.getAll(index(TypeAnnotationsScanner.class), annotated));
+            return Iterables.concat(subTypes, store.getAll(index(SubTypesScanner.class), subTypes));
         }
     }
 
@@ -573,7 +575,7 @@ public class Reflections {
      * <p>depends on ResourcesScanner configured
      * */
     public Set<String> getResources(final Predicate<String> namePredicate) {
-        Iterable<String> resources = Iterables.filter(store.get(index(ResourcesScanner.class)).keySet(), namePredicate);
+        Iterable<String> resources = Iterables.filter(store.get(index(ResourcesScanner.class)).keySet().stream(), namePredicate);
         return Sets.newHashSet(store.get(index(ResourcesScanner.class), resources));
     }
 

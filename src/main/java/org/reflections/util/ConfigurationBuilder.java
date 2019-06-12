@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * a fluent builder for {@link org.reflections.Configuration}, to be used for constructing a {@link org.reflections.Reflections} instance
@@ -250,8 +249,8 @@ public class ConfigurationBuilder implements Configuration {
      * the executor service spawns daemon threads by default.
      * <p>default is ThreadPoolExecutor with a single core */
     public ConfigurationBuilder useParallelExecutor(final int availableProcessors) {
-        ThreadFactory factory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("org.reflections-scanner-%d").build();
-        setExecutorService(Executors.newFixedThreadPool(availableProcessors, factory));
+        //ThreadFactory factory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("org.reflections-scanner-%d").build();
+        setExecutorService(Executors.newFixedThreadPool(availableProcessors, Executors.defaultThreadFactory()));
         return this;
     }
 

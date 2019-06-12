@@ -1,6 +1,5 @@
 package org.reflections.vfs;
 
-import com.google.common.collect.Iterables;
 import org.reflections.collections.Iterables;
 import org.reflections.collections.Lists;
 import org.reflections.Reflections;
@@ -19,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.jar.JarFile;
+import java.util.stream.StreamSupport;
 
 /**
  * a simple virtual file system bridge
@@ -144,11 +144,7 @@ public abstract class Vfs {
         for (final URL url : inUrls) {
             try {
                 result = Iterables.concat(result,
-                        Iterables.filter(new Iterable<File>() {
-                            public Iterator<File> iterator() {
-                                return fromURL(url).getFiles().iterator();
-                            }
-                        }, filePredicate));
+                        Iterables.filter(StreamSupport.stream(fromURL(url).getFiles().spliterator(), true), filePredicate));
             } catch (Throwable e) {
                 if (Reflections.log != null) {
                     Reflections.log.error("could not findFiles for url. continuing. [" + url + "]", e);

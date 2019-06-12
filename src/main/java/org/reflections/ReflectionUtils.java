@@ -1,8 +1,9 @@
 package org.reflections;
 
 import java.util.function.Predicate;
+
+import org.reflections.collections.Iterables;
 import org.reflections.predicates.Predicates;
-import com.google.common.collect.Iterables;
 import org.reflections.collections.Lists;
 import org.reflections.collections.Sets;
 import org.reflections.util.ClasspathHelper;
@@ -12,6 +13,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 import static org.reflections.util.Utils.isEmpty;
 
@@ -62,7 +64,7 @@ public abstract class ReflectionUtils {
     /** get all super types of given {@code type}, including, optionally filtered by {@code predicates}
      * <p> include {@code Object.class} if {@link #includeObject} is true */
     public static Set<Class<?>> getAllSuperTypes(final Class<?> type, Predicate<? super Class<?>>... predicates) {
-        Set<Class<?>> result = Sets.newLinkedHashSet();
+        Set<Class<?>> result = new LinkedHashSet<>();
         if (type != null && (includeObject || !type.equals(Object.class))) {
             result.add(type);
             for (Class<?> supertype : getSuperTypes(type)) {
@@ -142,7 +144,7 @@ public abstract class ReflectionUtils {
 
     /** filter all given {@code elements} with {@code predicates}, if given */
     public static <T extends AnnotatedElement> Set<T> getAll(final Set<T> elements, Predicate<? super T>... predicates) {
-        return isEmpty(predicates) ? elements : Sets.newHashSet(Iterables.filter(elements, Predicates.and(predicates)));
+        return isEmpty(predicates) ? elements : Sets.newHashSet(Iterables.filter(elements.stream(), Predicates.and(predicates)));
     }
 
     //predicates
@@ -458,12 +460,12 @@ public abstract class ReflectionUtils {
     //
     static <T> Set<T> filter(final T[] elements, Predicate<? super T>... predicates) {
         return isEmpty(predicates) ? Sets.newHashSet(elements) :
-                Sets.newHashSet(Iterables.filter(Arrays.asList(elements), Predicates.and(predicates)));
+                Sets.newHashSet(Iterables.filter(Arrays.asList(elements).stream(), Predicates.and(predicates)));
     }
 
     static <T> Set<T> filter(final Iterable<T> elements, Predicate<? super T>... predicates) {
         return isEmpty(predicates) ? Sets.newHashSet(elements) :
-                Sets.newHashSet(Iterables.filter(elements, Predicates.and(predicates)));
+                Sets.newHashSet(Iterables.filter(StreamSupport.stream(elements.spliterator(), false), Predicates.and(predicates)));
     }
 
     private static boolean areAnnotationMembersMatching(Annotation annotation1, Annotation annotation2) {

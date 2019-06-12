@@ -1,6 +1,6 @@
 package org.reflections.vfs;
 
-import com.google.common.collect.AbstractIterator;
+import kotlin.collections.AbstractIterator;
 import org.reflections.Reflections;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -26,15 +26,15 @@ public class ZipDir implements Vfs.Dir {
                 return new AbstractIterator<Vfs.File>() {
                     final Enumeration<? extends ZipEntry> entries = jarFile.entries();
 
-                    protected Vfs.File computeNext() {
+                    protected void computeNext() {
                         while (entries.hasMoreElements()) {
                             ZipEntry entry = entries.nextElement();
                             if (!entry.isDirectory()) {
-                                return new ZipFile(ZipDir.this, entry);
+                                setNext(new ZipFile(ZipDir.this, entry));
                             }
                         }
 
-                        return endOfData();
+                        done();
                     }
                 };
             }

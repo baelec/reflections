@@ -20,3 +20,13 @@ fun <T> any(collection: Collection<T>, predicate: Predicate<in T>): Boolean {
 fun <T> filter(collection: Stream<T>, predicate: Predicate<in T>): List<T> {
   return StreamSupport.stream(collection.spliterator(), false).filter { predicate.test(it) }.collect(Collectors.toList())
 }
+
+fun <T> isEmpty(collection: Collection<T>): Boolean = collection.isEmpty()
+
+fun <T> isEmpty(iterable: Iterable<T>): Boolean {
+  return iterable.count() == 0
+}
+
+fun <T> getOnlyElement(iterable: Iterable<T>): T {
+  return iterable.iterator().next()
+}
